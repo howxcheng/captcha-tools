@@ -12,6 +12,7 @@ git clone https://github.com/kafuneri/captcha-tools.git
 cd captcha-tools
 docker compose up -d #构建并运行镜像
 ```
+PS：国内服务器构建镜像时请自行配置代理或换源
 ### 3.对接[MihoyoBBSTools](https://github.com/Womsxd/MihoyoBBSTools)
 修改MihoyoBBSTools中的captcha.py为该项目中的[captcha.py](https://raw.githubusercontent.com/kafuneri/captcha-tools/refs/heads/main/captcha.py)
 
