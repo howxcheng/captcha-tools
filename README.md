@@ -1,3 +1,21 @@
+# 关于
+代码fork自[luguoyixiazi/test_nine](https://github.com/luguoyixiazi/test_nine)，在此仅添加docker构建配置以方便使用，仅供个人测试使用，不保证可用性
+# 食用方法
+### 1.安装docker
+教程很多，不再赘述，推荐使用
+```bash
+bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
+```
+### 2.构建镜像
+```bash
+git clone https://github.com/kafuneri/captcha-tools.git 
+cd captcha-tools
+docker compose up -d #构建并运行镜像
+```
+### 3.对接[MihoyoBBSTools](https://github.com/Womsxd/MihoyoBBSTools)
+修改MihoyoBBSTools中的captcha.py为该项目中的[captcha.py](https://raw.githubusercontent.com/kafuneri/captcha-tools/refs/heads/main/captcha.py)
+
+
 # 九宫格测试代码
 
 ## **本项目仅供学习交流使用，请勿用于商业用途，否则后果自负。**
