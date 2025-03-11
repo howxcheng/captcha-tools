@@ -1,0 +1,9 @@
+version: '3'
+services:
+  captcha-tools:
+    build: .  # 指定 Dockerfile 所在目录
+    image: captcha-tools:latest
+    container_name: captcha-tools
+    ports:
+      - "9645:9645"
+    restart: always
