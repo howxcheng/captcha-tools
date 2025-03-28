@@ -1,7 +1,7 @@
 httpx
 cryptography
 Pillow
-opencv-python
+opencv-python-headless
 httpx[http2]
 fastapi
 matplotlib
