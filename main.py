@@ -68,6 +68,6 @@ def get_pic(gt: str = Query(...),
 if __name__ == "__main__":
     from predict import predict_onnx,predict_onnx_pdl
     import uvicorn
-    print(f"{' '*10}api: http://127.0.0.1:{port}/pass_nine{' '*10}")
+    print(f"{' '*10}api: http://[YOUR_IP]:{port}/pass_nine{' '*10}")
     print(f"{' '*10}api所需参数：gt、challenge、point(可选){' '*10}")
-    uvicorn.run(app,port=port)
+    uvicorn.run(app,host="0.0.0.0",port=port)
