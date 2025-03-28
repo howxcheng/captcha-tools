@@ -1,13 +1,11 @@
 httpx
-torch
-fastapi
 cryptography
-matplotlib
 Pillow
 opencv-python
 httpx[http2]
+fastapi
+matplotlib
+tqdm
 onnxruntime
 numpy
-torchvision
-tqdm
 uvicorn

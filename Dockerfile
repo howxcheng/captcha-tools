@@ -8,6 +8,7 @@ COPY requirements.txt .
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc python3-dev \
  && pip3 install --user --no-cache-dir -r requirements.txt \
+ && pip3 install --user --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu \
  && apt-get purge -y --auto-remove gcc python3-dev \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
