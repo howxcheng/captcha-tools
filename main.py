@@ -47,7 +47,8 @@ def get_pic(gt: str = Query(...),
         result_list = predict_onnx(icon_image, bg_image, point)
         
     point_list = [f"{col}_{row}" for row, col in result_list]
-    wait_time = 4.0 - (time.time() - t)
+    elapsed_time = time.time() - t
+    wait_time = max(1, 4.0 - elapsed_time)  # 确保等待时间不为负数
     time.sleep(wait_time)
     result = json.loads(crack.verify(point_list))
     shutil.move(os.path.join(validate_path,pic_name),os.path.join(save_path,pic_name))
