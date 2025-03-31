@@ -46,9 +46,13 @@ def get_pic(gt: str = Query(...),
             bg_image = rb.read()
         result_list = predict_onnx(icon_image, bg_image, point)
         
-    point_list = [f"{col}_{row}" for row, col in result_list]
-    wait_time = 4.0 - (time.time() - t)
-    time.sleep(wait_time)
+        point_list = [f"{col}_{row}" for row, col in result_list]
+    elapsed_time = time.time() - t
+    wait_time = max(0, 4.0 - elapsed_time)  # 确保等待时间不为负数
+    
+    if wait_time > 0:
+        time.sleep(wait_time)
+    
     result = json.loads(crack.verify(point_list))
     shutil.move(os.path.join(validate_path,pic_name),os.path.join(save_path,pic_name))
     if 'validate' in result['data']:
@@ -65,9 +69,10 @@ def get_pic(gt: str = Query(...),
 
 
 
-if __name__ == "__main__":
-    from predict import predict_onnx,predict_onnx_pdl
-    import uvicorn
-    print(f"{' '*10}api: http://127.0.0.1:{port}/pass_nine{' '*10}")
-    print(f"{' '*10}api所需参数：gt、challenge、point(可选){' '*10}")
-    uvicorn.run(app,port=port)
+if name == "main":
+from predict import predict_onnx,predict_onnx_pdl
+import uvicorn
+print(f"{' '*10}api: http://0.0.0.0:{port}/pass_nine{' '*10}") # <- 修改提示
+print(f"{' '*10}在NAS上的访问地址为: http://[你的NAS内网IP]:{port}/pass_nine{' '*10}") # <- 新增提示
+print(f"{' '*10}api所需参数：gt、challenge、point(可选){' '*10}")
+uvicorn.run(app, host="0.0.0.0", port=port) # <- 这里添加了host参数
