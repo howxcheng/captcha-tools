@@ -2,9 +2,9 @@ import os
 
 import numpy as np
 
-from train import MyResNet18, data_transform
+# from train import MyResNet18, data_transform
 from crop_image import crop_image, convert_png_to_jpg,draw_points_on_image
-import torch
+# import torch
 import time
 import cv2
 from PIL import Image

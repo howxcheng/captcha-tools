@@ -5,10 +5,8 @@ WORKDIR /app
 COPY requirements.txt .
 
 # 合并清理步骤到单个 RUN 指令
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc python3-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends gcc python3-dev \
  && pip3 install --user --no-cache-dir -r requirements.txt \
- && pip3 install --user --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu \
  && apt-get purge -y --auto-remove gcc python3-dev \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -16,9 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 FROM python:3.10-slim
 
 # 合并运行时依赖安装步骤
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
+RUN apt-get update && apt-get install -y --no-install-recommends libgl1-mesa-glx libglib2.0-0 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

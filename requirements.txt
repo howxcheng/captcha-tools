@@ -1,4 +1,3 @@
-httpx
 cryptography
 Pillow
 opencv-python-headless
