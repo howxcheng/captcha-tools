@@ -1,3 +1,125 @@
+# About
+
+Code forked from [luguoyixiazi/test_nine](https://github.com/luguoyixiazi/test_nine).
+This fork primarily adds Docker build configurations for convenience.
+Intended for personal testing only; usability is not guaranteed.
+
+# Usage
+
+### 1. Install Docker
+
+Numerous tutorials are available online. The recommended installation command is:
+```bash
+bash <(curl -sSL [https://linuxmirrors.cn/docker.sh](https://linuxmirrors.cn/docker.sh))
+```
+
+### 2. Build the Image (Optional)
+
+```bash
+git clone [https://github.com/kafuneri/captcha-tools.git](https://github.com/kafuneri/captcha-tools.git)
+cd captcha-tools
+docker compose up -d # Build and run the image
+```
+PS: If using a server in mainland China, please configure a proxy or change package sources accordingly when building the image.
+
+### 4. Use the Pre-built Image
+
+Using `docker-compose.yaml`:
+```yaml
+version: '3'
+services:
+  captcha-tools:
+    image: kafuneri/captcha-tools:latest # Use captcha-tools:arm64 for arm64 devices
+    container_name: captcha-tools
+    network_mode: host  # Set to host network mode
+    restart: always
+```
+
+### 5. Integrate with [MihoyoBBSTools](https://github.com/Womsxd/MihoyoBBSTools)
+
+Replace the `captcha.py` file in your MihoyoBBSTools installation with the [captcha.py](https://raw.githubusercontent.com/kafuneri/captcha-tools/refs/heads/main/captcha.py) provided in this repository.
+
+# Nine-Square Grid Test Code
+
+## **This project is for learning and communication purposes only. Do not use it for commercial purposes. You are responsible for any consequences.**
+
+## Reference Projects
+
+Model and V4 dataset: https://github.com/taisuii/ClassificationCaptchaOcr
+API: https://github.com/ravizhan/geetest-v3-click-crack
+
+## Running Steps
+
+### 1. Install Dependencies
+
+(Optional) a. If training with PaddlePaddle, you also need to install paddlex and the image classification module. Refer to the project https://github.com/PaddlePaddle/PaddleX for installation instructions.
+
+(* Required!) b. Create a `model` folder in the project root directory and place the model file(s) inside. Name them `resnet18.onnx` or `PP-HGNetV2-B4.onnx`. The default model used is `PP-HGNetV2-B4.onnx`. If using ResNet, set `use_v3_model` to `False` in the code, as the model inputs/outputs differ (you may need to modify the code yourself).
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Prepare Your Own Dataset (V3 and V4 differ) (Optional)
+
+##### a. Training ResNet18 (Optional)
+
+-   Refer to the referenced project above for dataset details. However, that project uses a V4 dataset. V3 lacks a demo; adapt as needed. Using a V4 dataset to train for V3 without code modification results in poor accuracy.
+-   The main difference is image dimensions. V4 APIs provide two images: a target image and a nine-square grid. V3 combines them, requiring target cropping. V3 target images have low clarity. V4 grid images, after removing black borders, are 100x86 pixels. V3 grid images are 112x112. It's unclear what transformations V4 applies compared to V3; modifying preprocessing is necessary.
+
+##### b. Training PP-HGNetV2-B4 (Optional)
+
+This model was chosen arbitrarily from Paddle. The dataset format is as follows. If using a V4 dataset for V3 training, consider applying more data augmentation/transformations.
+```
+    dataset
+    ├─images    # Path for all images
+    ├─label.txt # Label file path, format per line: <index> <space> <class_name>, e.g., 15 Globe
+    ├─train.txt # Training images list, format per line: <image_path> <space> <class_index>, e.g., images/001.jpg 0
+    └─Validation and test sets follow the same format
+```
+
+##### c. To crop V3 images, use `crop_image_v3` in `crop_image.py`. For V4, use `crop_image`. Write your own cropping script as needed.
+
+### 3. Train the Model (Optional)
+
+-   To train ResNet18, run `python train.py`
+-   To train PP-HGNetV2-B4, run `python train_paddle.py`
+
+### 4. Convert the Model to ONNX (Optional)
+
+-   Run `python convert.py` (Modify the script internally to select the model you want to convert, usually the one with the lowest loss).
+-   For Paddle models, you need to install `paddle2onnx`. See details at https://www.paddlepaddle.org.cn/documentation/docs/guides/advanced/model_to_onnx_cn.html
+
+### 5. Start the FastAPI Service (Requires a trained ONNX model)
+
+Run `python main.py` (By default, it uses the Paddle ONNX model. Modify the comments/code if you want to use ResNet18).
+
+Due to potential issues with trajectory generation, verification might succeed locally but fail on the target system. It is recommended to increase the number of retry attempts. The trained Paddle model achieves an accuracy above 99.9%.
+
+### 6. API Call
+
+Example Python call:
+
+```python
+import httpx
+
+def game_captcha(gt: str, challenge: str):
+    try:
+        res = httpx.get("[http://127.0.0.1:9645/pass_nine](http://127.0.0.1:9645/pass_nine)", params={'gt': gt, 'challenge': challenge, 'use_v3_model': True}, timeout=10)
+        res.raise_for_status() # Raise an exception for bad status codes (4xx or 5xx)
+        datas = res.json().get('data', {})
+        if datas.get('result') == 'success':
+            return datas.get('validate')
+    except httpx.RequestError as exc:
+        print(f"An error occurred while requesting {exc.request.url!r}: {exc}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+    return None # Returns None on failure, 'validate' string on success
+```
+
+
+
 # 关于
 代码fork自[luguoyixiazi/test_nine](https://github.com/luguoyixiazi/test_nine)，在此仅添加docker构建配置以方便使用，仅供个人测试使用，不保证可用性
 # 食用方法
