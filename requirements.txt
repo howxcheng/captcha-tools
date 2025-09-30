@@ -1,5 +1,4 @@
 httpx
-torch
 fastapi
 cryptography
 matplotlib
@@ -8,6 +7,5 @@ opencv-python
 httpx[http2]
 onnxruntime
 numpy
-torchvision
 tqdm
 uvicorn
